@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     java
     application
@@ -8,10 +10,8 @@ repositories {
 }
 
 dependencies {
-    testCompile("org.assertj", "assertj-core", "3.12.0")
-    testCompile("org.junit.jupiter", "junit-jupiter-api", "5.4.0")
-    testCompile("org.junit.jupiter", "junit-jupiter-params", "5.4.0")
-    testRuntime("org.junit.jupiter", "junit-jupiter-engine", "5.4.0")
+    testImplementation("org.assertj", "assertj-core", "3.12.0")
+    testImplementation("org.junit.jupiter", "junit-jupiter", "5.7.0")
 }
 
 configure<JavaPluginConvention> {
@@ -25,5 +25,9 @@ configure<ApplicationPluginConvention> {
 
 tasks.withType<Test> {
     failFast = true
-    useJUnitPlatform()
+    useJUnitPlatform {
+        testLogging {
+            events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
+        }
+    }
 }
