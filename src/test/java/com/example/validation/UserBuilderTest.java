@@ -2,9 +2,13 @@ package com.example.validation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,5 +35,24 @@ class UserBuilderTest {
         var user = userInstance.get();
         assertThat(user.getPassword()).isEqualTo("s3cr3t#!");
         assertThat(user.getCode()).isEqualTo(101);
+    }
+
+    public static Stream<Arguments> invalidArguments() {
+        return Stream.of(
+            Arguments.of(-1, "s3cr3t#!"),
+            Arguments.of(101, "invalid")
+        );
+    }
+
+    @DisplayName("It returns empty when code or password are invalid")
+    @ParameterizedTest
+    @MethodSource("invalidArguments")
+    void testApplyValidationRulesInvalid(int code, String password) {
+        Optional<User> userInstance = new UserBuilder()
+            .withCode(code).validatedBy(codeValidator)
+            .withPassword(password).validatedBy(passwordValidator)
+            .create();
+
+        assertThat(userInstance.isPresent()).isFalse();
     }
 }
