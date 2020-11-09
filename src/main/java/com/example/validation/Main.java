@@ -1,9 +1,14 @@
 package com.example.validation;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        List<String> arguments = Arrays.asList(args);
+        var code = Integer.parseInt(arguments.get(0));
+        var password = arguments.get(1);
+
         var codeValidator = new UserCodeValidator(List.of(
             UserCodeValidator.isCodeSignPositive,
             UserCodeValidator.isCodeLengthThree));
@@ -13,8 +18,8 @@ public class Main {
             UserPasswordValidator.containsAtLeastOneHashbang));
 
         var userInstance = new UserBuilder()
-            .withCode(-10).validatedBy(codeValidator)
-            .withPassword("s3cr3t#!").validatedBy(passwordValidator)
+            .withCode(code).validatedBy(codeValidator)
+            .withPassword(password).validatedBy(passwordValidator)
             .create();
 
         userInstance.ifPresentOrElse(
