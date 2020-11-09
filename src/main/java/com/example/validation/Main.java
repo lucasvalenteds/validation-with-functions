@@ -1,25 +1,19 @@
 package com.example.validation;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<String> arguments = Arrays.asList(args);
-        var code = Integer.parseInt(arguments.get(0));
-        var password = arguments.get(1);
-
-        var codeValidator = new UserCodeValidator(List.of(
-            UserCodeValidator.isCodeSignPositive,
-            UserCodeValidator.isCodeLengthThree));
-
-        var passwordValidator = new UserPasswordValidator(List.of(
-            UserPasswordValidator.isPasswordEightCharsLength,
-            UserPasswordValidator.containsAtLeastOneHashbang));
+        var code = Integer.parseInt(args[0]);
+        var password = args[1];
 
         var userInstance = new UserBuilder()
-            .withCode(code).validatedBy(codeValidator)
-            .withPassword(password).validatedBy(passwordValidator)
+            .withCode(code).validatedBy(new UserCodeValidator(List.of(
+                UserCodeValidator.isCodeSignPositive,
+                UserCodeValidator.isCodeLengthThree)))
+            .withPassword(password).validatedBy(new UserPasswordValidator(List.of(
+                UserPasswordValidator.isPasswordEightCharsLength,
+                UserPasswordValidator.containsAtLeastOneHashbang)))
             .create();
 
         userInstance.ifPresentOrElse(
