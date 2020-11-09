@@ -5,7 +5,7 @@ public final class User {
     private final int code;
     private final String password;
 
-    public User(int code, String password) {
+    public User(final int code, final String password) {
         this.code = code;
         this.password = password;
     }
