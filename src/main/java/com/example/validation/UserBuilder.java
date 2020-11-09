@@ -23,8 +23,11 @@ public final class UserBuilder {
         return this;
     }
 
-    public UserBuilder validatedBy(final UserPasswordValidator passwordValidator) {
-        this.passwordValidator = passwordValidator;
+    public UserBuilder validatedBy(final UserPasswordValidator validator) {
+        this.passwordValidator = Optional
+            .ofNullable(validator)
+            .orElse(new UserPasswordValidator(List.of()));
+
         return this;
     }
 
